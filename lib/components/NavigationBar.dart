@@ -12,7 +12,7 @@ class NavigationBarWidget extends StatefulWidget {
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     int _selectedIndex = 0;
-    static List<Widget> _widgetOptions = <Widget>[
+    List<Widget> _widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
         ProfileView(),
