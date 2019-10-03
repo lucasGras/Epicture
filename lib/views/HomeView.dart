@@ -11,7 +11,23 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Home"),
+      child: ListView.builder(
+        itemCount: 4,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            semanticContainer: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Container(
+              child: ,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 5,
+            margin: EdgeInsets.all(10),
+          );
+        },
+      )
     );
   }
 }
