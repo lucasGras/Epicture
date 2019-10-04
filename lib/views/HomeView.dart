@@ -40,7 +40,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget createPostHeader(BuildContext context) {
-    return Row(
+    return Container(
+        child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
@@ -65,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         )
       ],
-    );
+    ));
   }
 
   Widget createPostImage(BuildContext context) {

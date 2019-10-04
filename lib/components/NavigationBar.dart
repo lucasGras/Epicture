@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:epicture/views/HomeView.dart';
 import 'package:epicture/views/SearchView.dart';
 import 'package:epicture/views/ProfileView.dart';
+import 'package:epicture/views/NewView.dart';
 
 class NavigationBarWidget extends StatefulWidget {
     NavigationBarWidget({Key key}) : super(key: key);
@@ -15,6 +16,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     List<Widget> _widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
+        NewView(),
         ProfileView(),
     ];
 
@@ -44,12 +46,17 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                         title: Text('Search'),
                     ),
                     BottomNavigationBarItem(
+                      icon: Icon(Icons.photo_camera),
+                      title: Text('New'),
+                    ),
+                    BottomNavigationBarItem(
                         icon: Icon(Icons.person),
                         title: Text('Profile'),
                     ),
                 ],
                 currentIndex: _selectedIndex,
                 selectedItemColor: Colors.amber[800],
+                unselectedItemColor: Colors.grey,
                 onTap: _onItemTapped,
             ),
         );
