@@ -24,7 +24,7 @@ class _SearchViewState extends State<SearchView> {
   Widget createCardGrid(BuildContext context) {
     return Flexible(
       child: GridView.builder(
-          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemCount: 20,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
