@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:epicture/components/NavigationBar.dart';
+import 'package:epicture/views/LoginView.dart';
+import 'package:epicture/managers/imgur/Account.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(Epicture());
 
 class Epicture extends StatelessWidget {
+
+  Epicture() {
+    SharedPreferences.setMockInitialValues({});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +19,7 @@ class Epicture extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: NavigationBarWidget(),
+      home: LoginView()
     );
   }
 }

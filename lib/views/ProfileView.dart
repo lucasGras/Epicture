@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:epicture/models/AccountBase.dart';
+import 'package:epicture/managers/imgur/Account.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileView extends StatefulWidget {
     ProfileView({Key key}) : super(key: key);
@@ -8,17 +11,33 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+    AccountBase accountBase;
+
+    _ProfileViewState() {
+        SharedPreferences.getInstance().then((SharedPreferences prefs) {
+            Account().getAccountBase(prefs.getString("user_account_name")).then((AccountBase resp) {
+                print(resp.toJson());
+                setState(() {
+                    this.accountBase = resp;
+                });
+            });
+        });
+    }
 
     @override
     Widget build(BuildContext context) {
-        return Container(
-            child: Column(
-                children: <Widget>[
-                    createProfileHeader(context),
-                    createProfileAlbum(context)
-                ],
-            ),
-        );
+        if (this.accountBase == null) {
+            return CircularProgressIndicator();
+        } else {
+            return Container(
+                child: Column(
+                    children: <Widget>[
+                        createProfileHeader(context),
+                        createProfileAlbum(context)
+                    ],
+                ),
+            );
+        }
     }
 
     Widget createResultCard(BuildContext context) {
@@ -74,7 +93,7 @@ class _ProfileViewState extends State<ProfileView> {
                             Container(
                                 margin: EdgeInsets.only(top: 10),
                                 child: Text(
-                                    "This is my bio. I upload random pictures <3 follow me :)",
+                                    (this.accountBase.bio == null) ? "Aucune biographie" : this.accountBase.bio,
                                     style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
                                 ),
                             )
@@ -109,7 +128,7 @@ class _ProfileViewState extends State<ProfileView> {
               margin: EdgeInsets.only(
                   top: 5),
               child: Text(
-                "randompictureofficial",
+                this.accountBase.name,
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 12),
@@ -149,7 +168,7 @@ class _ProfileViewState extends State<ProfileView> {
                   color: Colors.blueAccent),
             ),
             Container(
-              child: Text("0"),
+              child: Text(this.accountBase.reputation.toString()),
             )
           ],
         ),
