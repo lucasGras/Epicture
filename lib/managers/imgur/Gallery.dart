@@ -34,10 +34,10 @@ class Gallery extends Imgur {
         }
     }
 
-    Future<GalleryList> getGalleryResearch(String search) async {
+    Future<GalleryList> getGalleryResearch(String search, String sort, String window) async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
-        var url =  "/time/week/1";
+        var url =  "/" + sort + "/" + window + "/1";
         var queryUrl = "?q=" + search;
 
         var response = await http.get(
