@@ -29,21 +29,23 @@ class _LoginViewState extends State<LoginView> {
 
       var uri = Uri.parse(state.url.replaceFirst('#', '?'));
 
-      webViewPlugin.close();
+      if (uri.query.contains('access_token')) {
+          webViewPlugin.close();
 
-      SharedPreferences.getInstance().then((SharedPreferences prefs) {
-        print(state.url);
-        print("SHARED: " + uri.queryParameters["access_token"]);
-        prefs.setString('user_access_token', uri.queryParameters["access_token"]);
-        prefs.setString('user_refresh_token', uri.queryParameters["refresh_token"]);
-        prefs.setString('user_account_name', uri.queryParameters["account_username"]);
-        prefs.setString('account_id', clientId);
-        //prefs.setInt('user_access_token_expires', int.parse(uri.queryParameters["expires_in"]));
+          SharedPreferences.getInstance().then((SharedPreferences prefs) {
+              print(state.url);
+              print("SHARED: " + uri.queryParameters["access_token"]);
+              prefs.setString('user_access_token', uri.queryParameters["access_token"]);
+              prefs.setString('user_refresh_token', uri.queryParameters["refresh_token"]);
+              prefs.setString('user_account_name', uri.queryParameters["account_username"]);
+              prefs.setString('account_id', clientId);
+              //prefs.setInt('user_access_token_expires', int.parse(uri.queryParameters["expires_in"]));
 
-        setState(() {
-          this.isLoggedIn = true;
-        });
-      });
+              setState(() {
+                  this.isLoggedIn = true;
+              });
+          });
+      }
     });
   }
 
