@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
@@ -15,20 +14,22 @@ class _HomeViewState extends State<HomeView> {
   GalleryList galleryList;
 
   _HomeViewState() {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      Gallery().getGallery({
-        "section": "hot",
-        "sort": "viral",
-        "page": "2",
-        "window": "day"
-      }, {
-        "showViral": true,
-        "showMature": false,
-        "albumPreviews": false
-      }).then((GalleryList list) {
-        setState(() {
-          this.galleryList = list;
-        });
+    Gallery().getGallery({
+      "section": "hot",
+      "sort": "viral",
+      "page": "1",
+      "window": "day"
+    }, {
+      "showViral": true,
+      "showMature": false,
+      "albumPreviews": false
+    }).then((GalleryList list) {
+      setState(() {
+        this.galleryList = list;
+        // Sort files to keep only images
+        this.galleryList.gallery.removeWhere((i) => (
+            i.imagesInfo != null && i.imagesInfo[0].type.contains('mp4')
+        ));
       });
     });
   }
@@ -50,8 +51,8 @@ class _HomeViewState extends State<HomeView> {
               children: <Widget>[
                 Container(
                     padding: EdgeInsets.all(5),
-                    child: createPostHeader(context, this.galleryList.gallery[index])
-                ),
+                    child: createPostHeader(
+                        context, this.galleryList.gallery[index])),
                 createPostImage(context, this.galleryList.gallery[index]),
                 createPostActions(context, this.galleryList.gallery[index]),
                 createPostComments(context, this.galleryList.gallery[index])
@@ -100,7 +101,10 @@ class _HomeViewState extends State<HomeView> {
 
   Widget createPostImage(BuildContext context, GalleryImage image) {
     return Image.network(
-      "https://i.imgur.com/" + image.cover + "." + image.imagesInfo[0].type.split('/')[1],
+      "https://i.imgur.com/" +
+          image.cover +
+          "." +
+          image.imagesInfo[0].type.split('/')[1],
       fit: BoxFit.fill,
     );
   }
@@ -136,9 +140,7 @@ class _HomeViewState extends State<HomeView> {
         TextSpan(
             text: image.username + "  ",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
-        TextSpan(
-            text: image.title,
-            style: TextStyle(fontSize: 11))
+        TextSpan(text: image.title, style: TextStyle(fontSize: 11))
       ])),
     );
   }

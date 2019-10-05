@@ -34,6 +34,29 @@ class Gallery extends Imgur {
         }
     }
 
+    Future<GalleryList> getGalleryResearch(String search) async {
+        var sharedPreferences = await SharedPreferences.getInstance();
+
+        var url =  "/time/week/1";
+        var queryUrl = "?q=" + search;
+
+        var response = await http.get(
+            this.baseUrl + "/gallery/search" + url + queryUrl,
+            headers: {
+                "Authorization": "Client-ID " + sharedPreferences.getString("account_id")
+            }
+        );
+
+        print(response.body);
+
+        if (response.statusCode == 200) {
+            var json = convert.jsonDecode(response.body);
+            return GalleryList.fromJson(json);
+        } else {
+            return null;
+        }
+    }
+
     Future<Map<String, dynamic>> getGalleryImageInfo(String imageHash) {
 
     }
