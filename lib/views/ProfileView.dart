@@ -18,25 +18,9 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
     TabController tabController;
 
     _ProfileViewState() {
-        Account().getAccountImages().then((GalleryList resp) {
-            //print(resp.toJson());
-            setState(() {
-              this.accountImages = resp;
-            });
-        });
-
-        Account().getAccountBase().then((AccountBase resp) {
-            //print(resp.toJson());
-            setState(() {
-                this.accountBase = resp;
-            });
-        });
-
-        Account().getAccountPublicationsCount().then((int count) {
-            setState(() {
-              this.pubCount = count;
-            });
-        });
+        Account().getAccountImages().then((GalleryList g) => (setState(() => this.accountImages = g)));
+        Account().getAccountBase().then((AccountBase a) => (setState(() => this.accountBase = a)));
+        Account().getAccountPublicationsCount().then((int c) => (setState(() => this.pubCount = c)));
     }
 
     @override

@@ -7,6 +7,10 @@ import 'package:epicture/models/GalleryList.dart';
 
 class Account extends Imgur {
 
+    /// Future<AccountBase> getAccountBase
+    /// curl --location --request GET "https://api.imgur.com/3/account/{{username}}" \
+    ///  --header "Authorization: Client-ID {{clientId}}"
+    /// AccountBase Serializable
     Future<AccountBase> getAccountBase() async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
@@ -25,6 +29,10 @@ class Account extends Imgur {
         }
     }
 
+    /// Future<GalleryList> getAccountImages
+    /// curl --location --request GET "https://api.imgur.com/3/account/me/images" \
+    ///  --header "Authorization: Bearer {{accessToken}}"
+    /// GalleryList Serializable
     Future<GalleryList> getAccountImages() async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
@@ -35,8 +43,6 @@ class Account extends Imgur {
             }
         );
 
-        print(response.body);
-
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
             return GalleryList.fromJson(json);
@@ -45,6 +51,10 @@ class Account extends Imgur {
         }
     }
 
+    /// Future<int> getAccountPublicationsCount
+    /// curl --location --request GET "https://api.imgur.com/3/account/{{username}}/images/count" \
+    ///  --header "Authorization: Bearer {{accessToken}}"
+    /// int
     Future<int> getAccountPublicationsCount() async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
@@ -63,30 +73,15 @@ class Account extends Imgur {
         }
     }
 
-    Future<Map<String, dynamic>> getAccountAlbums() async {
-        var sharedPreferences = await SharedPreferences.getInstance();
-
-        var response = await http.get(
-            this.baseUrl + "/account/" + sharedPreferences.getString("user_account_name") + "/albums",
-            headers: {
-                "Authorization": "Client-ID " + sharedPreferences.getString("account_id")
-            }
-        );
-
-        print("ALUBMS: ");
-        print(response.body);
-
-        if (response.statusCode == 200) {
-            var json = convert.jsonDecode(response.body);
-            return json;
-        } else {
-            return null;
-        }
-    }
-
+    /// Future<Map<String, dynamic>> uploadImage
+    /// curl --location --request POST "https://api.imgur.com/3/image" \
+    ///  --header "Authorization: Client-ID {{clientId}}" \
+    ///  --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    /// Map<String, dynamic>
     Future<Map<String, dynamic>> uploadImage(Map<String, dynamic> data) async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
+        // Image Form Data is send in base64 format
         List<int> imageBytes = data["image"].readAsBytesSync();
         String base64Image = convert.base64Encode(imageBytes);
 
@@ -104,7 +99,6 @@ class Account extends Imgur {
 
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
-            print(json["data"]);
             return json["data"];
         } else {
             return null;
