@@ -28,7 +28,8 @@ class _HomeViewState extends State<HomeView> {
         this.galleryList = list;
         // Sort files to keep only images
         this.galleryList.gallery.removeWhere((i) => (
-            i.imagesInfo != null && i.imagesInfo[0].type.contains('mp4')
+            (i.imagesInfo != null && i.imagesInfo.length != 0 && i.imagesInfo[0].type.contains('mp4'))
+            || (i.cover == null)
         ));
       });
     });
@@ -84,7 +85,9 @@ class _HomeViewState extends State<HomeView> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage('https://placeimg.com/640/480/any'))),
+                      image: NetworkImage("https://imgur.com/user/" + image.username + "/avatar")
+                  )
+              ),
             ),
           ),
         ),

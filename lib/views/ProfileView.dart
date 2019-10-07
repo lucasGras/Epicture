@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:epicture/models/AccountBase.dart';
 import 'package:epicture/managers/imgur/Account.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:epicture/models/GalleryList.dart';
+import 'package:epicture/models/GalleryImage.dart';
 
 class ProfileView extends StatefulWidget {
     ProfileView({Key key}) : super(key: key);
@@ -10,29 +11,51 @@ class ProfileView extends StatefulWidget {
     _ProfileViewState createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStateMixin {
     AccountBase accountBase;
+    GalleryList accountImages;
+    int pubCount;
+    TabController tabController;
 
     _ProfileViewState() {
-        SharedPreferences.getInstance().then((SharedPreferences prefs) {
-            Account().getAccountBase(prefs.getString("user_account_name")).then((AccountBase resp) {
-                print(resp.toJson());
-                setState(() {
-                    this.accountBase = resp;
-                });
+        Account().getAccountImages().then((GalleryList resp) {
+            //print(resp.toJson());
+            setState(() {
+              this.accountImages = resp;
+            });
+        });
+
+        Account().getAccountBase().then((AccountBase resp) {
+            //print(resp.toJson());
+            setState(() {
+                this.accountBase = resp;
+            });
+        });
+
+        Account().getAccountPublicationsCount().then((int count) {
+            setState(() {
+              this.pubCount = count;
             });
         });
     }
 
     @override
+    void initState() {
+        super.initState();
+        tabController = TabController(length: 2, vsync: this);
+    }
+
+    @override
     Widget build(BuildContext context) {
-        if (this.accountBase == null) {
+        if (this.accountBase == null || this.accountImages == null
+            || this.pubCount == null) {
             return CircularProgressIndicator();
         } else {
             return Container(
                 child: Column(
                     children: <Widget>[
                         createProfileHeader(context),
+                        createTabBar(context),
                         createProfileAlbum(context)
                     ],
                 ),
@@ -40,7 +63,24 @@ class _ProfileViewState extends State<ProfileView> {
         }
     }
 
-    Widget createResultCard(BuildContext context) {
+    Widget createTabBar(BuildContext context) {
+        return Container(
+            child: TabBar(
+                controller: this.tabController,
+                tabs: <Widget>[
+                    Tab(
+                        icon: Icon(Icons.person, color: Colors.blueAccent),
+                    ),
+                    Tab(
+                        icon: Icon(Icons.favorite, color: Colors.blueAccent)
+                    )
+                ],
+            ),
+        );
+    }
+
+    Widget createResultCard(BuildContext context, GalleryImage image) {
+        //print(image.toJson());
         return Container(
             child: Card(
                 semanticContainer: true,
@@ -51,7 +91,11 @@ class _ProfileViewState extends State<ProfileView> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                    'https://placeimg.com/640/480/any'))),
+                                    "https://i.imgur.com/" + image.id + "." +
+                                        ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1])
+                                )
+                            )
+                        ),
                     ),
                 )
             ),
@@ -59,16 +103,35 @@ class _ProfileViewState extends State<ProfileView> {
     }
 
     Widget createProfileAlbum(BuildContext context) {
-        return Flexible(
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemCount: 20,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                    return createResultCard(context);
-                }
+        return Expanded(
+            child: TabBarView(
+                controller: this.tabController,
+                children: <Widget>[
+                    Container(
+                        child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3),
+                            itemCount: this.accountImages.gallery.length,
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                                return createResultCard(context, this.accountImages.gallery[index]);
+                            }
+                        ),
+                    ),
+                    Container(
+                        child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4),
+                            itemCount: this.accountImages.gallery.length,
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                                return createResultCard(context, this.accountImages.gallery[index]);
+                            }
+                        ),
+                    )
+                ],
             ),
         );
     }
@@ -118,7 +181,7 @@ class _ProfileViewState extends State<ProfileView> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage('https://placeimg.com/640/480/any')
+                          image: NetworkImage("https://imgur.com/user/" + this.accountBase.name + "/avatar")
                       )
                   ),
                 ),
@@ -145,11 +208,16 @@ class _ProfileViewState extends State<ProfileView> {
           children: <Widget>[
             Container(
               child: Icon(
-                  Icons.mode_comment,
-                  color: Colors.blueAccent),
+                  Icons.camera,
+                  color: Colors.blueAccent,
+                  size: 30,
+              ),
             ),
             Container(
-              child: Text("32"),
+              child: Text(
+                  this.pubCount.toString(),
+                  style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             )
           ],
         ),
@@ -165,10 +233,15 @@ class _ProfileViewState extends State<ProfileView> {
             Container(
               child: Icon(
                   Icons.grade,
-                  color: Colors.blueAccent),
+                  color: Colors.blueAccent,
+                  size: 30,
+              ),
             ),
             Container(
-              child: Text(this.accountBase.reputation.toString()),
+              child: Text(
+                  this.accountBase.reputation.toString(),
+                  style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             )
           ],
         ),

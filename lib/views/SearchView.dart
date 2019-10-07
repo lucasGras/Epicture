@@ -128,8 +128,8 @@ class _SearchViewState extends State<SearchView> {
     Widget createCardGrid(BuildContext context) {
         // Sort files to keep only images
         this.galleryList.gallery.removeWhere((i) => (
-            i.imagesInfo != null && i.imagesInfo[0].type.contains('mp4')
-                && i.cover != null
+            (i.imagesInfo != null && i.imagesInfo.length != 0 && i.imagesInfo[0].type.contains('mp4'))
+                || (i.cover == null)
         ));
 
         return Flexible(

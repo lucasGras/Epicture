@@ -3,6 +3,7 @@ import 'package:epicture/views/HomeView.dart';
 import 'package:epicture/views/SearchView.dart';
 import 'package:epicture/views/ProfileView.dart';
 import 'package:epicture/views/NewView.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NavigationBarWidget extends StatefulWidget {
     NavigationBarWidget({Key key}) : super(key: key);
@@ -16,7 +17,6 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     List<Widget> _widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
-        NewView(),
         ProfileView(),
     ];
 
@@ -29,6 +29,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
                 title: const Text('Epicture'),
             ),
@@ -46,10 +47,6 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                         title: Text('Search'),
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.photo_camera),
-                      title: Text('New'),
-                    ),
-                    BottomNavigationBarItem(
                         icon: Icon(Icons.person),
                         title: Text('Profile'),
                     ),
@@ -58,6 +55,16 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                 selectedItemColor: Colors.amber[800],
                 unselectedItemColor: Colors.grey,
                 onTap: _onItemTapped,
+            ),
+            floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.photo_camera),
+                onPressed: () async {
+                    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => NewView(imageData: image)
+                    ));
+                },
             ),
         );
     }
