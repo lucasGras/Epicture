@@ -13,8 +13,9 @@ class NavigationBarWidget extends StatefulWidget {
 }
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
-    int _selectedIndex = 0;
-    List<Widget> _widgetOptions = <Widget>[
+    int selectedIndex = 0;
+    List<String> pageNames = ["Epicture", "Search", "Profile"];
+    List<Widget> widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
         ProfileView(),
@@ -22,7 +23,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
     void _onItemTapped(int index) {
         setState(() {
-            _selectedIndex = index;
+            selectedIndex = index;
         });
     }
 
@@ -30,11 +31,15 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     Widget build(BuildContext context) {
         return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-                title: const Text('Epicture'),
+            appBar: PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: AppBar(
+                    backgroundColor: Colors.lightBlueAccent,
+                    title: Text(pageNames[selectedIndex])
+                ),
             ),
             body: Center(
-                child: _widgetOptions.elementAt(_selectedIndex),
+                child: widgetOptions.elementAt(selectedIndex),
             ),
             bottomNavigationBar: BottomNavigationBar(
                 items: const <BottomNavigationBarItem>[
@@ -51,13 +56,14 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                         title: Text('Profile'),
                     ),
                 ],
-                currentIndex: _selectedIndex,
-                selectedItemColor: Colors.amber[800],
-                unselectedItemColor: Colors.grey,
+                currentIndex: selectedIndex,
+                selectedItemColor: Colors.lightBlueAccent,
+                unselectedItemColor: Colors.grey.shade700,
                 onTap: _onItemTapped,
             ),
             floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.photo_camera),
+                backgroundColor: Colors.lightBlueAccent,
                 onPressed: () async {
                     var image = await ImagePicker.pickImage(source: ImageSource.camera);
 

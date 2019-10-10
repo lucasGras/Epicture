@@ -5,7 +5,7 @@ import 'package:epicture/models/GalleryImage.dart';
 import 'package:epicture/managers/imgur/Image.dart' as ImgurImage;
 
 class HomeView extends StatefulWidget {
-  HomeView({Key key}) : super(key: key);
+  HomeView({Key key, }) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -167,12 +167,12 @@ class _HomeViewState extends State<HomeView> {
           ),*/
           Container(
             child: IconButton(
-                icon: Icon(Icons.save_alt, color: Colors.blueAccent),
+                icon: Icon(Icons.save_alt, color: Colors.lightBlueAccent),
                 onPressed: () {
                   ImgurImage.Image().favoriteImage(image).then((Map<String, dynamic> resp) {
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text("Image saved in favorites !"),
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Colors.lightBlueAccent,
                     ));
                   });
                 }
