@@ -66,9 +66,9 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          elevation: 5,
+          elevation: 7,
           margin: EdgeInsets.all(10),
         );
       },
@@ -81,6 +81,7 @@ class _HomeViewState extends State<HomeView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
+          padding: EdgeInsets.all(5),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Container(

@@ -30,6 +30,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
+            backgroundColor: Colors.grey.shade50,
             resizeToAvoidBottomInset: false,
             appBar: PreferredSize(
                 preferredSize: Size.fromHeight(40),

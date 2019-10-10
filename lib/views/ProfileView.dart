@@ -55,10 +55,16 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
                 controller: this.tabController,
                 tabs: <Widget>[
                     Tab(
-                        icon: Icon(Icons.person, color: Colors.blueAccent),
+                        icon: Icon(
+                            Icons.person,
+                            color: Colors.lightBlueAccent
+                        ),
                     ),
                     Tab(
-                        icon: Icon(Icons.favorite, color: Colors.blueAccent)
+                        icon: Icon(
+                            Icons.favorite,
+                            color: Colors.lightBlueAccent
+                        )
                     )
                 ],
             ),
@@ -180,7 +186,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
                 this.accountBase.name,
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 12),
+                    fontSize: 15),
               ),
             )
           ],
@@ -195,7 +201,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
             Container(
               child: Icon(
                   Icons.camera,
-                  color: Colors.blueAccent,
+                  color: Colors.lightBlueAccent,
                   size: 30,
               ),
             ),
@@ -219,7 +225,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
             Container(
               child: Icon(
                   Icons.grade,
-                  color: Colors.blueAccent,
+                  color: Colors.lightBlueAccent,
                   size: 30,
               ),
             ),
