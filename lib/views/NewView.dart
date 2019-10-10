@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:epicture/managers/imgur/Account.dart';
+import 'package:epicture/managers/imgur/Image.dart' as ImgurImage;
 
 class NewView extends StatelessWidget {
     final File imageData;
@@ -72,7 +72,7 @@ class NewView extends StatelessWidget {
                                                 content: Text("Image uploaded !")
                                             );
 
-                                            Account().uploadImage({
+                                            ImgurImage.Image().uploadImage({
                                                 "image": this.imageData,
                                                 "title": "",
                                                 "description": ""

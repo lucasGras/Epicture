@@ -20,7 +20,7 @@ class Gallery extends Imgur {
         var response = await http.get(
             this.baseUrl + "/gallery/" + url + queryUrl,
             headers: {
-                "Authorization": "Client-ID " + sharedPreferences.getString("account_id")
+                "Authorization": "Bearer " + sharedPreferences.getString("user_access_token")
             }
         );
 
@@ -47,8 +47,6 @@ class Gallery extends Imgur {
             }
         );
 
-        print(response.body);
-
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
             return GalleryList.fromJson(json);
@@ -57,7 +55,24 @@ class Gallery extends Imgur {
         }
     }
 
-    Future<Map<String, dynamic>> getGalleryImageInfo(String imageHash) {
+    Future<Map<String, dynamic>> voteImage(String hash, String voteType) async {
+        var sharedPreferences = await SharedPreferences.getInstance();
 
+        if (!["up", "down"].contains(voteType))
+            return null;
+
+        var response = await http.post(
+            this.baseUrl + "/gallery/" + hash + "/vote/" + voteType,
+            headers: {
+                "Authorization": "Bearer " + sharedPreferences.getString("user_access_token")
+            }
+        );
+
+        if (response.statusCode == 200) {
+            var json = convert.jsonDecode(response.body);
+            return json;
+        } else {
+            return null;
+        }
     }
 }

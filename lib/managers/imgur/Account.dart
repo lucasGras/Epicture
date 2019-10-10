@@ -73,36 +73,29 @@ class Account extends Imgur {
         }
     }
 
-    /// Future<Map<String, dynamic>> uploadImage
-    /// curl --location --request POST "https://api.imgur.com/3/image" \
-    ///  --header "Authorization: Client-ID {{clientId}}" \
-    ///  --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    /// Map<String, dynamic>
-    Future<Map<String, dynamic>> uploadImage(Map<String, dynamic> data) async {
+    /// Future<GalleryList> getGalleryFavorites
+    ///curl --location --request GET "https://api.imgur.com/3/account/{{username}}/
+    /// gallery_favorites/{{page}}/{{favoritesSort}}" \
+    ///  --header "Authorization: Client-ID {{clientId}}"
+    ///  GalleryList Serializable
+    Future<GalleryList> getGalleryFavorites() async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
-        // Image Form Data is send in base64 format
-        List<int> imageBytes = data["image"].readAsBytesSync();
-        String base64Image = convert.base64Encode(imageBytes);
-
-        var response = await http.post(
-            this.baseUrl + "/upload",
+        var response = await http.get(
+            this.baseUrl + "/account/" + sharedPreferences.getString("user_account_name")
+                + "/favorites",
             headers: {
                 "Authorization": "Bearer " + sharedPreferences.getString("user_access_token")
-            },
-            body: {
-                "image": base64Image,
-                "title": data["title"],
-                "description": data["description"]
             }
         );
 
+        print(response.body);
+
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
-            return json["data"];
+            return GalleryList.fromJson(json);
         } else {
             return null;
         }
     }
-
 }

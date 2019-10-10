@@ -14,6 +14,7 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStateMixin {
     AccountBase accountBase;
     GalleryList accountImages;
+    GalleryList accountFavoritesImages;
     int pubCount;
     TabController tabController;
 
@@ -21,6 +22,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
         Account().getAccountImages().then((GalleryList g) => (setState(() => this.accountImages = g)));
         Account().getAccountBase().then((AccountBase a) => (setState(() => this.accountBase = a)));
         Account().getAccountPublicationsCount().then((int c) => (setState(() => this.pubCount = c)));
+        Account().getGalleryFavorites().then((GalleryList g) => (setState(() => this.accountFavoritesImages = g)));
     }
 
     @override
@@ -107,11 +109,11 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
                         child: GridView.builder(
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 4),
-                            itemCount: this.accountImages.gallery.length,
+                            itemCount: this.accountFavoritesImages.gallery.length,
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
-                                return createResultCard(context, this.accountImages.gallery[index]);
+                                return createResultCard(context, this.accountFavoritesImages.gallery[index]);
                             }
                         ),
                     )

@@ -17,9 +17,12 @@ class GalleryImage {
     int comments;
     @JsonKey(name: "images")
     List<ImageInfo> imagesInfo;
+    @JsonKey(name: "favorite")
+    bool isFavorite;
+    String vote;
 
     GalleryImage(this.username, this.title, this.id, this.comments, this.cover, this.downs,
-        this.ups, this.views, this.imagesInfo);
+        this.ups, this.views, this.imagesInfo, this.isFavorite);
 
     factory GalleryImage.fromJson(Map<String, dynamic> json) => _$GalleryImageFromJson(json);
 

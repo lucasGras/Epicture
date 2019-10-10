@@ -19,7 +19,9 @@ GalleryImage _$GalleryImageFromJson(Map<String, dynamic> json) {
       (json['images'] as List)
           ?.map((e) =>
               e == null ? null : ImageInfo.fromJson(e as Map<String, dynamic>))
-          ?.toList());
+          ?.toList(),
+      json['favorite'] as bool)
+    ..vote = json['vote'] as String;
 }
 
 Map<String, dynamic> _$GalleryImageToJson(GalleryImage instance) =>
@@ -32,5 +34,7 @@ Map<String, dynamic> _$GalleryImageToJson(GalleryImage instance) =>
       'ups': instance.ups,
       'downs': instance.downs,
       'comment_count': instance.comments,
-      'images': instance.imagesInfo
+      'images': instance.imagesInfo,
+      'favorite': instance.isFavorite,
+      'vote': instance.vote
     };

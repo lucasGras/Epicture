@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
+import 'package:epicture/managers/imgur/Image.dart' as ImgurImage;
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -12,6 +13,10 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   GalleryList galleryList;
+
+  final favoriteNotTriggered = Icon(Icons.favorite_border, color: Colors.blueAccent,);
+  final favoriteTriggered = Icon(Icons.favorite, color: Colors.redAccent);
+
 
   _HomeViewState() {
     Gallery().getGallery({
@@ -118,13 +123,62 @@ class _HomeViewState extends State<HomeView> {
         children: <Widget>[
           Container(
             child:
-                IconButton(icon: Icon(Icons.favorite_border), onPressed: null),
+                IconButton(
+                    icon: Icon(
+                        Icons.thumb_up,
+                        color: (image.vote != null && image.vote == "up") ? Colors.greenAccent : Colors.grey
+                    ),
+                    onPressed: () {
+                      Gallery().voteImage(image.id, 'up').then((Map<String, dynamic> resp) {
+                        setState(() {
+                          image.vote = "up";
+                        });
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("You just liked " + image.username + "'s post !"),
+                          backgroundColor: Colors.greenAccent,
+                        ));
+                      });
+                    }
+                ),
           ),
           Container(
-            child: IconButton(icon: Icon(Icons.comment), onPressed: null),
+            child:
+            IconButton(
+                icon: Icon(
+                    Icons.thumb_down,
+                    color: (image.vote != null && image.vote == "down") ? Colors.redAccent : Colors.grey
+                ),
+                onPressed: () {
+                  Gallery().voteImage(image.id, 'down').then((Map<String, dynamic> resp) {
+                    setState(() {
+                      image.vote = "down";
+                    });
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("You just disliked " + image.username + "'s post !"),
+                      backgroundColor: Colors.redAccent,
+                    ));
+                  });
+                }
+            ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 200),
+            child: IconButton(icon: Icon(Icons.comment, color: Colors.blueAccent), onPressed: null),
+          ),
+          Container(
+            child: IconButton(
+                icon: Icon(Icons.save_alt, color: Colors.blueAccent),
+                onPressed: () {
+                  ImgurImage.Image().favoriteImage(image).then((Map<String, dynamic> resp) {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Image saved in favorites !"),
+                      backgroundColor: Colors.blueAccent,
+                    ));
+                  });
+                }
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 100),
             child: Text(
               image.ups.toString() + " J'aime",
               style: TextStyle(fontWeight: FontWeight.w600),
