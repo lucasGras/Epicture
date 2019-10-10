@@ -34,7 +34,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
     @override
     Widget build(BuildContext context) {
         if (this.accountBase == null || this.accountImages == null
-            || this.pubCount == null) {
+            || this.pubCount == null || this.accountFavoritesImages == null) {
             return CircularProgressIndicator();
         } else {
             return Container(
