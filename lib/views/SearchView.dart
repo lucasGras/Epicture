@@ -13,18 +13,12 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
     GalleryList galleryList;
-    final textInputController = TextEditingController();
+    TextEditingController textInputController;
     int currentSortingOption = 0;
     int currentWindowOption = 0;
     List<String> sortOptions = ["time", "viral", "top"];
     List<String> windowOptions = ["all", "day", "week", "month", "year"];
     String currentSearch = "Cat";
-
-    @override
-    void dispose() {
-        textInputController.dispose();
-        super.dispose();
-    }
 
     _SearchViewState() {
         SharedPreferences.getInstance().then((SharedPreferences prefs) {
@@ -34,6 +28,40 @@ class _SearchViewState extends State<SearchView> {
                 setState(() {
                     this.galleryList = list;
                 });
+            });
+        });
+    }
+
+    @override
+    void dispose() {
+        textInputController.dispose();
+        super.dispose();
+    }
+
+    @override
+    void initState() {
+        this.textInputController = TextEditingController();
+        super.initState();
+    }
+
+    void updateSortingOptions(int index) {
+        this.currentSortingOption = index;
+        Gallery().getGalleryResearch(this.currentSearch,
+            this.sortOptions[this.currentSortingOption],
+            this.windowOptions[this.currentWindowOption]).then((GalleryList list) {
+            setState(() {
+                this.galleryList = list;
+            });
+        });
+    }
+
+    void updateWindowOptions(int index) {
+        this.currentWindowOption = index;
+        Gallery().getGalleryResearch(this.currentSearch,
+            this.sortOptions[this.currentSortingOption],
+            this.windowOptions[this.currentWindowOption]).then((GalleryList list) {
+            setState(() {
+                this.galleryList = list;
             });
         });
     }
@@ -61,12 +89,13 @@ class _SearchViewState extends State<SearchView> {
                     alignment: Alignment.topCenter,
                     child: TextField(
                         onSubmitted: (String search) {
+                            this.currentSearch = search;
                             Gallery().getGalleryResearch(this.currentSearch,
                                 this.sortOptions[this.currentSortingOption],
                                 this.windowOptions[this.currentWindowOption]).then((GalleryList list) {
-                                setState(() {
-                                    this.galleryList = list;
-                                });
+                                    setState(() {
+                                        this.galleryList = list;
+                                    });
                             });
                         },
                         controller: this.textInputController,
@@ -79,45 +108,94 @@ class _SearchViewState extends State<SearchView> {
                     ),
                 ),
                 Container(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    padding: EdgeInsets.all(5),
+                    child: Column(
                         children: <Widget>[
                             Container(
-                                child: ButtonBar(
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                        RaisedButton(
-                                            child: Text(this.sortOptions[this.currentSortingOption]),
-                                            onPressed: () {
-                                                this.currentSortingOption++;
-                                                if (this.currentSortingOption >= this.sortOptions.length)
-                                                    this.currentSortingOption = 0;
-                                                Gallery().getGalleryResearch(this.currentSearch,
-                                                    this.sortOptions[this.currentSortingOption],
-                                                    this.windowOptions[this.currentWindowOption]).then((GalleryList list) {
-                                                    setState(() {
-                                                        this.galleryList = list;
-                                                    });
-                                                });
-                                            },
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentSortingOption == 0) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Time"),
+                                                onPressed: () => this.updateSortingOptions(0),
+                                            ),
                                         ),
-                                        RaisedButton(
-                                            child: Text(this.windowOptions[this.currentWindowOption]),
-                                            onPressed: () {
-                                                this.currentWindowOption++;
-                                                if (this.currentWindowOption >= this.windowOptions.length)
-                                                    this.currentWindowOption = 0;
-                                                Gallery().getGalleryResearch(this.currentSearch,
-                                                    this.sortOptions[this.currentSortingOption],
-                                                    this.windowOptions[this.currentWindowOption]).then((GalleryList list) {
-                                                    setState(() {
-                                                        this.galleryList = list;
-                                                    });
-                                                });
-                                            },
-                                        )
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentSortingOption == 1) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Viral"),
+                                                onPressed: () => this.updateSortingOptions(1),
+                                            ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentSortingOption == 2) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Top"),
+                                                onPressed: () => this.updateSortingOptions(2),
+                                            ),
+                                        ),
                                     ],
                                 ),
-                            )
+                            ),
+                            Container(
+                                child: Row(
+                                    children: <Widget>[
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentWindowOption == 0) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("All"),
+                                                onPressed: () => this.updateWindowOptions(0),
+                                            ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentWindowOption == 1) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Day"),
+                                                onPressed: () => this.updateWindowOptions(1),
+                                            ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentWindowOption == 2) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Week"),
+                                                onPressed: () => this.updateWindowOptions(2),
+                                            ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentWindowOption == 3) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Month"),
+                                                onPressed: () => this.updateWindowOptions(3),
+                                            ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: InputChip(
+                                                selected: (this.currentWindowOption == 4) ? true : false,
+                                                selectedColor: Colors.lightBlueAccent,
+                                                label: Text("Year"),
+                                                onPressed: () => this.updateWindowOptions(4),
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
                         ],
                     ),
                 ),

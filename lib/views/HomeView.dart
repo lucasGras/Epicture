@@ -120,6 +120,7 @@ class _HomeViewState extends State<HomeView> {
   Widget createPostActions(BuildContext context, GalleryImage image) {
     return Container(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             child:
@@ -160,10 +161,10 @@ class _HomeViewState extends State<HomeView> {
                   });
                 }
             ),
-          ),
+          ),/*
           Container(
             child: IconButton(icon: Icon(Icons.comment, color: Colors.blueAccent), onPressed: null),
-          ),
+          ),*/
           Container(
             child: IconButton(
                 icon: Icon(Icons.save_alt, color: Colors.blueAccent),
@@ -177,8 +178,9 @@ class _HomeViewState extends State<HomeView> {
                 }
             ),
           ),
+          Spacer(),
           Container(
-            margin: EdgeInsets.only(left: 100),
+              margin: EdgeInsets.only(right: 20),
             child: Text(
               image.ups.toString() + " J'aime",
               style: TextStyle(fontWeight: FontWeight.w600),
