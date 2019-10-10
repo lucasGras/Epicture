@@ -228,11 +228,13 @@ class _SearchViewState extends State<SearchView> {
     Widget createResultCardImage(BuildContext context, GalleryImage image) {
         return Container(
             child: Card(
+                elevation: 5,
                 semanticContainer: true,
                 child: GridTile(
                     child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(10),
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
