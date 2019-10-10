@@ -3,6 +3,7 @@ import 'package:epicture/views/HomeView.dart';
 import 'package:epicture/views/SearchView.dart';
 import 'package:epicture/views/ProfileView.dart';
 import 'package:epicture/views/NewView.dart';
+import 'package:epicture/views/Settings.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NavigationBarWidget extends StatefulWidget {
@@ -14,11 +15,12 @@ class NavigationBarWidget extends StatefulWidget {
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     int selectedIndex = 0;
-    List<String> pageNames = ["Epicture", "Search", "Profile"];
+    List<String> pageNames = ["Epicture", "Search", "Profile", "Settings"];
     List<Widget> widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
         ProfileView(),
+        SettingsView()
     ];
 
     void _onItemTapped(int index) {
@@ -55,6 +57,10 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                     BottomNavigationBarItem(
                         icon: Icon(Icons.person),
                         title: Text('Profile'),
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                        title: Text('Settings'),
                     ),
                 ],
                 currentIndex: selectedIndex,

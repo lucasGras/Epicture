@@ -98,4 +98,14 @@ class Account extends Imgur {
             return null;
         }
     }
+
+    Future<void> logout() async {
+        var sharedPreferences = await SharedPreferences.getInstance();
+
+        await http.post(
+            this.baseImgurUrl + "/logout?client_id=" + sharedPreferences.getString("account_id")
+        );
+        
+        return;
+    }
 }
