@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:epicture/managers/imgur/Imgur.dart';
 import 'package:epicture/models/GalleryList.dart';
+import 'package:epicture/models/CommentList.dart';
 
 class Gallery extends Imgur {
 
@@ -71,6 +72,26 @@ class Gallery extends Imgur {
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
             return json;
+        } else {
+            return null;
+        }
+    }
+
+    Future<CommentList> getImageComments(String imageHash, String sort) async {
+        var sharedPreferences = await SharedPreferences.getInstance();
+
+        var response = await http.get(
+            this.baseUrl + "/gallery/" + imageHash + "/comments/" + sort,
+            headers: {
+                "Authorization": "Bearer " + sharedPreferences.getString("user_access_token")
+            }
+        );
+
+        print(response.body);
+
+        if (response.statusCode == 200) {
+            var json = convert.jsonDecode(response.body);
+            return CommentList.fromJson(json);
         } else {
             return null;
         }

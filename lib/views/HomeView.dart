@@ -3,9 +3,13 @@ import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
 import 'package:epicture/managers/imgur/Image.dart' as ImgurImage;
+import 'package:epicture/models/CommentList.dart';
+import 'package:epicture/components/ImageComments.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({Key key, }) : super(key: key);
+  HomeView({
+    Key key,
+  }) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -14,9 +18,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   GalleryList galleryList;
 
-  final favoriteNotTriggered = Icon(Icons.favorite_border, color: Colors.blueAccent,);
+  final favoriteNotTriggered = Icon(
+    Icons.favorite_border,
+    color: Colors.blueAccent,
+  );
   final favoriteTriggered = Icon(Icons.favorite, color: Colors.redAccent);
-
 
   _HomeViewState() {
     Gallery().getGallery({
@@ -32,10 +38,10 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         this.galleryList = list;
         // Sort files to keep only images
-        this.galleryList.gallery.removeWhere((i) => (
-            (i.imagesInfo != null && i.imagesInfo.length != 0 && i.imagesInfo[0].type.contains('mp4'))
-            || (i.cover == null)
-        ));
+        this.galleryList.gallery.removeWhere((i) => ((i.imagesInfo != null &&
+                i.imagesInfo.length != 0 &&
+                i.imagesInfo[0].type.contains('mp4')) ||
+            (i.cover == null)));
       });
     });
   }
@@ -91,9 +97,9 @@ class _HomeViewState extends State<HomeView> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage("https://imgur.com/user/" + image.username + "/avatar")
-                  )
-              ),
+                      image: NetworkImage("https://imgur.com/user/" +
+                          image.username +
+                          "/avatar"))),
             ),
           ),
         ),
@@ -124,45 +130,48 @@ class _HomeViewState extends State<HomeView> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            child:
-                IconButton(
-                    icon: Icon(
-                        Icons.thumb_up,
-                        color: (image.vote != null && image.vote == "up") ? Colors.greenAccent : Colors.grey
-                    ),
-                    onPressed: () {
-                      Gallery().voteImage(image.id, 'up').then((Map<String, dynamic> resp) {
-                        setState(() {
-                          image.vote = "up";
-                        });
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("You just liked " + image.username + "'s post !"),
-                          backgroundColor: Colors.greenAccent,
-                        ));
-                      });
-                    }
-                ),
+            child: IconButton(
+                icon: Icon(Icons.thumb_up,
+                    color: (image.vote != null && image.vote == "up")
+                        ? Colors.greenAccent
+                        : Colors.grey),
+                onPressed: () {
+                  Gallery()
+                      .voteImage(image.id, 'up')
+                      .then((Map<String, dynamic> resp) {
+                    setState(() {
+                      image.vote = "up";
+                    });
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "You just liked " + image.username + "'s post !"),
+                      backgroundColor: Colors.greenAccent,
+                    ));
+                  });
+                }),
           ),
           Container(
-            child:
-            IconButton(
-                icon: Icon(
-                    Icons.thumb_down,
-                    color: (image.vote != null && image.vote == "down") ? Colors.redAccent : Colors.grey
-                ),
+            child: IconButton(
+                icon: Icon(Icons.thumb_down,
+                    color: (image.vote != null && image.vote == "down")
+                        ? Colors.redAccent
+                        : Colors.grey),
                 onPressed: () {
-                  Gallery().voteImage(image.id, 'down').then((Map<String, dynamic> resp) {
+                  Gallery()
+                      .voteImage(image.id, 'down')
+                      .then((Map<String, dynamic> resp) {
                     setState(() {
                       image.vote = "down";
                     });
                     Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text("You just disliked " + image.username + "'s post !"),
+                      content: Text(
+                          "You just disliked " + image.username + "'s post !"),
                       backgroundColor: Colors.redAccent,
                     ));
                   });
-                }
-            ),
-          ),/*
+                }),
+          ),
+          /*
           Container(
             child: IconButton(icon: Icon(Icons.comment, color: Colors.blueAccent), onPressed: null),
           ),*/
@@ -170,18 +179,19 @@ class _HomeViewState extends State<HomeView> {
             child: IconButton(
                 icon: Icon(Icons.save_alt, color: Colors.lightBlueAccent),
                 onPressed: () {
-                  ImgurImage.Image().favoriteImage(image).then((Map<String, dynamic> resp) {
+                  ImgurImage.Image()
+                      .favoriteImage(image)
+                      .then((Map<String, dynamic> resp) {
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text("Image saved in favorites !"),
                       backgroundColor: Colors.lightBlueAccent,
                     ));
                   });
-                }
-            ),
+                }),
           ),
           Spacer(),
           Container(
-              margin: EdgeInsets.only(right: 20),
+            margin: EdgeInsets.only(right: 20),
             child: Text(
               image.ups.toString() + " J'aime",
               style: TextStyle(fontWeight: FontWeight.w600),
@@ -197,26 +207,37 @@ class _HomeViewState extends State<HomeView> {
       TextSpan(
           text: user + "  ",
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
-          TextSpan(
-              text: comment,
-              style: TextStyle(fontSize: 11)
-          )
-        ]
-      )
-    );
+      TextSpan(text: comment, style: TextStyle(fontSize: 11))
+    ]));
   }
 
   Widget createPostComments(BuildContext context, GalleryImage image) {
     return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Container(
-            child: createPostComment(context, image.username, image.title),
-          ),
-        ],
-      )
-    );
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: createPostComment(context, image.username, image.title),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: FlatButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ImageComments(image: image)));
+                  },
+                  textColor: Colors.grey,
+                  splashColor: Colors.white,
+                  highlightColor: Colors.white,
+                  child: Text(
+                    "See comments... (" + image.comments.toString() + ")",
+                    style: TextStyle(fontSize: 12),
+                  )),
+            )
+          ],
+        ));
   }
 }
