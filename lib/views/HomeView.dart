@@ -192,16 +192,31 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget createPostComment(BuildContext context, String user, String comment) {
+    return Text.rich(TextSpan(children: <TextSpan>[
+      TextSpan(
+          text: user + "  ",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
+          TextSpan(
+              text: comment,
+              style: TextStyle(fontSize: 11)
+          )
+        ]
+      )
+    );
+  }
+
   Widget createPostComments(BuildContext context, GalleryImage image) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.all(10),
-      child: Text.rich(TextSpan(children: <TextSpan>[
-        TextSpan(
-            text: image.username + "  ",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
-        TextSpan(text: image.title, style: TextStyle(fontSize: 11))
-      ])),
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: createPostComment(context, image.username, image.title),
+          ),
+        ],
+      )
     );
   }
 }

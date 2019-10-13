@@ -55,8 +55,12 @@ class _LoginViewState extends State<LoginView> {
       return WebviewScaffold(
           url: "https://api.imgur.com/oauth2/authorize?client_id=" + clientId +
               "&response_type=" + responseType,
-          appBar: AppBar(
-            title: Text("Connexion"),
+          appBar: PreferredSize(
+              preferredSize: Size.fromHeight(40),
+              child: AppBar(
+                  backgroundColor: Colors.lightBlueAccent,
+                  title: Text("Connexion"),
+              ),
           )
       );
     } else {

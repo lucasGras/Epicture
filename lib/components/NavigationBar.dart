@@ -3,7 +3,6 @@ import 'package:epicture/views/HomeView.dart';
 import 'package:epicture/views/SearchView.dart';
 import 'package:epicture/views/ProfileView.dart';
 import 'package:epicture/views/NewView.dart';
-import 'package:epicture/views/Settings.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NavigationBarWidget extends StatefulWidget {
@@ -19,8 +18,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     List<Widget> widgetOptions = <Widget>[
         HomeView(),
         SearchView(),
-        ProfileView(),
-        SettingsView()
+        ProfileView()
     ];
 
     void _onItemTapped(int index) {
@@ -29,18 +27,38 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         });
     }
 
+    Widget defaultAppBar(BuildContext context) {
+        return PreferredSize(
+            preferredSize: Size.fromHeight(40),
+            child: AppBar(
+                backgroundColor: Colors.lightBlueAccent,
+                title: Text(pageNames[selectedIndex]),
+            ),
+        );
+    }
+
+    Widget profileAppBar(BuildContext context) {
+        return PreferredSize(
+            preferredSize: Size.fromHeight(40),
+            child: AppBar(
+                backgroundColor: Colors.lightBlueAccent,
+                title: Text(pageNames[selectedIndex]),
+                actions: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.forward, color: Colors.white),
+                        onPressed: null
+                    )
+                ],
+            ),
+        );
+    }
+
     @override
     Widget build(BuildContext context) {
         return Scaffold(
             backgroundColor: Colors.grey.shade50,
             resizeToAvoidBottomInset: false,
-            appBar: PreferredSize(
-                preferredSize: Size.fromHeight(40),
-                child: AppBar(
-                    backgroundColor: Colors.lightBlueAccent,
-                    title: Text(pageNames[selectedIndex])
-                ),
-            ),
+            appBar: (selectedIndex == 2) ? profileAppBar(context) : defaultAppBar(context),
             body: Center(
                 child: widgetOptions.elementAt(selectedIndex),
             ),
@@ -57,11 +75,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                     BottomNavigationBarItem(
                         icon: Icon(Icons.person),
                         title: Text('Profile'),
-                    ),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        title: Text('Settings'),
-                    ),
+                    )
                 ],
                 currentIndex: selectedIndex,
                 selectedItemColor: Colors.lightBlueAccent,

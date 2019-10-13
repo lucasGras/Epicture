@@ -102,10 +102,9 @@ class Account extends Imgur {
     Future<void> logout() async {
         var sharedPreferences = await SharedPreferences.getInstance();
 
-        await http.post(
+        return await http.post(
             this.baseImgurUrl + "/logout?client_id=" + sharedPreferences.getString("account_id")
         );
-        
-        return;
+        ;
     }
 }
