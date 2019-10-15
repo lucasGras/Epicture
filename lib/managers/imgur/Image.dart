@@ -52,8 +52,6 @@ class Image extends Imgur {
             }
         );
 
-        print(response.body);
-
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
             return json;

@@ -9,9 +9,9 @@ class Comment {
     int ups;
     int downs;
     String vote;
+    dynamic id;
 
-
-    Comment(this.comment, this.vote, this.author, this.downs, this.ups);
+    Comment(this.comment, this.vote, this.author, this.downs, this.ups, this.id);
 
     factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
 

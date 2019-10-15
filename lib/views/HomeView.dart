@@ -3,7 +3,6 @@ import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
 import 'package:epicture/managers/imgur/Image.dart' as ImgurImage;
-import 'package:epicture/models/CommentList.dart';
 import 'package:epicture/components/ImageComments.dart';
 
 class HomeView extends StatefulWidget {
@@ -83,7 +82,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget createPostHeader(BuildContext context, GalleryImage image) {
     return Container(
-        child: Row(
+      child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
@@ -98,8 +97,9 @@ class _HomeViewState extends State<HomeView> {
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage("https://imgur.com/user/" +
-                          image.username +
-                          "/avatar"))),
+                          image.username + "/avatar")
+                  )
+              ),
             ),
           ),
         ),

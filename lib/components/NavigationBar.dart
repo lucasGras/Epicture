@@ -86,7 +86,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                 child: Icon(Icons.photo_camera),
                 backgroundColor: Colors.lightBlueAccent,
                 onPressed: () async {
-                    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+                    var image = await ImagePicker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) => NewView(imageData: image)

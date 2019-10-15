@@ -89,8 +89,6 @@ class Account extends Imgur {
             }
         );
 
-        print(response.body);
-
         if (response.statusCode == 200) {
             var json = convert.jsonDecode(response.body);
             return GalleryList.fromJson(json);

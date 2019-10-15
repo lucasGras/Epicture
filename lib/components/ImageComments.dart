@@ -4,6 +4,7 @@ import 'package:epicture/models/Comment.dart';
 import 'package:epicture/models/GalleryImage.dart';
 import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:epicture/managers/imgur/Comment.dart' as CommentManager;
 
 class ImageComments extends StatefulWidget {
   final GalleryImage image;
@@ -39,8 +40,8 @@ class _ImageCommentsState extends State<ImageComments> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc){
-          return Container(
-            height: 150,
+          return Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 200),
             child: Column(
               children: <Widget>[
                 Container(
@@ -99,7 +100,7 @@ class _ImageCommentsState extends State<ImageComments> {
       ),
       body: (this.comments == null || prefs == null)
           ? Center(child: CircularProgressIndicator())
-          : buildList(context),
+          : this.buildList(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_comment),
         onPressed: () => this.createCommentUpload(context)
@@ -151,10 +152,34 @@ class _ImageCommentsState extends State<ImageComments> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   IconButton(
-                      icon: Icon(Icons.thumb_up, size: 15), onPressed: null),
+                      icon: Icon(
+                          Icons.thumb_up,
+                          size: 15,
+                          color: (this.comments.list[index].vote == "up") ? Colors.lightGreenAccent : Colors.grey
+                      ),
+                      onPressed: () {
+                        CommentManager.Comment().voteComment(this.comments.list[index].id, "up").then((Map<String, dynamic> json) {
+                          setState(() {
+                            this.comments.list[index].vote = "up";
+                          });
+                        });
+                      }
+                  ),
                   Text(this.comments.list[index].ups.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
                   IconButton(
-                      icon: Icon(Icons.thumb_down, size: 15), onPressed: null),
+                      icon: Icon(
+                          Icons.thumb_down,
+                          size: 15,
+                          color: (this.comments.list[index].vote == "down") ? Colors.redAccent : Colors.grey
+                      ),
+                      onPressed: () {
+                        CommentManager.Comment().voteComment(this.comments.list[index].id, "down").then((Map<String, dynamic> json) {
+                          setState(() {
+                            this.comments.list[index].vote = "down";
+                          });
+                        });
+                      }
+                  ),
                   Text(this.comments.list[index].downs.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
                 ],
               ),
