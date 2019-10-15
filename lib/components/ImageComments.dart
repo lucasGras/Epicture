@@ -18,10 +18,13 @@ class ImageComments extends StatefulWidget {
 class _ImageCommentsState extends State<ImageComments> {
   CommentList comments;
   SharedPreferences prefs;
+  TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
+
+    this.controller = TextEditingController();
 
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       this.prefs = prefs;
@@ -37,52 +40,66 @@ class _ImageCommentsState extends State<ImageComments> {
   }
 
   void createCommentUpload(BuildContext context) {
-    showModalBottomSheet(
+    showDialog(
         context: context,
         builder: (BuildContext bc){
-          return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 200),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    "https://i.imgur.com/user/" + prefs.getString("user_account_name") + "/avatar"
-                                )
-                            )
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text(prefs.getString("user_account_name"), style: TextStyle(fontWeight: FontWeight.w600)),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  child: TextFormField(
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                      color: Colors.lightBlueAccent,
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                      }
-                  )
-                )
-              ],
-            )
+          return AlertDialog(
+	    shape: RoundedRectangleBorder(
+		borderRadius: BorderRadius.circular(20)
+	    ),
+	    title: Text("New comment"),
+            content: ConstrainedBox(
+		constraints: BoxConstraints(maxHeight: 100),
+	    	child: Column(
+		    children: <Widget>[
+			Container(
+			    padding: EdgeInsets.all(10),
+			    child: Row(
+				children: <Widget>[
+				    Container(
+					width: 30,
+					height: 30,
+					decoration: BoxDecoration(
+					    shape: BoxShape.circle,
+					    image: DecorationImage(
+						fit: BoxFit.cover,
+						image: NetworkImage(
+						    "https://i.imgur.com/user/" + prefs.getString("user_account_name") + "/avatar"
+						)
+					    )
+					),
+				    ),
+				    Container(
+					padding: EdgeInsets.only(left: 10),
+					child: Text(prefs.getString("user_account_name"), style: TextStyle(fontWeight: FontWeight.w600)),
+				    )
+				],
+			    ),
+			),
+			Container(
+			    child: TextFormField(
+				controller: this.controller,
+			    ),
+			)
+		    ],
+		),
+	    ),
+	    actions: <Widget>[
+		FlatButton(
+		    child: Text('Cancel', style: TextStyle(color: Colors.grey)),
+		    onPressed: () {
+			Navigator.of(context).pop();
+		    },
+		),
+		FlatButton(
+		    child: Text('Comment', style: TextStyle(color: Colors.lightBlueAccent, fontWeight: FontWeight.w600)),
+		    onPressed: () {
+		        CommentManager.Comment().postComment(this.controller.value.text, this.widget.image.id).then((Map<String, dynamic> json) {
+		            setState(() {});
+			});
+		    },
+		)
+	    ],
           );
         }
     );

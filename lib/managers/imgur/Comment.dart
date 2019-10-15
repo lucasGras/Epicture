@@ -25,4 +25,27 @@ class Comment extends Imgur {
 	    return null;
 	}
     }
+
+    Future<Map<String, dynamic>> postComment(String comment, String imageId) async {
+	var sharedPreferences = await SharedPreferences.getInstance();
+
+	var response = await http.post(
+	    this.baseUrl + "/comment/",
+	    headers: {
+		"Authorization": "Bearer " + sharedPreferences.getString("user_access_token")
+	    },
+	    body: {
+	        "image_id": imageId,
+		"comment": comment
+	    }
+	);
+
+	print(response.body);
+
+	if (response.statusCode == 200) {
+	    return convert.jsonDecode(response.body);
+	} else {
+	    return null;
+	}
+    }
 }
