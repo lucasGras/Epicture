@@ -73,12 +73,18 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
     }
 
     Widget createResultCard(BuildContext context, GalleryImage image) {
-        //print(image.toJson());
         return Container(
             child: Card(
                 semanticContainer: true,
                 child: InkWell(
                     onTap: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => ImageViewer(
+                                image: image,
+                                isFromUser: true,
+                                canPopContext: true)
+                            )
+                        );
                     },
                     child: GridTile(
                         child: Container(

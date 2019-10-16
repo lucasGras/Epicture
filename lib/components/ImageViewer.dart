@@ -7,8 +7,14 @@ import 'package:epicture/components/ImageComments.dart';
 class ImageViewer extends StatefulWidget {
   final GalleryImage image;
   final bool canPopContext;
+  final bool isFromUser;
 
-  ImageViewer({Key key, @required this.image, @required this.canPopContext}) : super(key: key);
+  ImageViewer({
+      Key key,
+      @required this.image,
+      @required this.canPopContext,
+      @required this.isFromUser
+  }) : super(key: key);
 
   @override
   _ImageViewerState createState() => _ImageViewerState();
@@ -41,7 +47,8 @@ class _ImageViewerState extends State<ImageViewer> {
 		      children: <Widget>[
 			  Container(
 			      padding: EdgeInsets.all(5),
-			      child: createPostHeader(context, this.widget.image)),
+			      child: createPostHeader(context, this.widget.image)
+			  ),
 			  createPostImage(context, this.widget.image),
 			  createPostActions(context, this.widget.image),
 			  createPostComments(context, this.widget.image)
@@ -74,40 +81,54 @@ class _ImageViewerState extends State<ImageViewer> {
   }
 
   Widget createPostHeader(BuildContext context, GalleryImage image) {
-      return Container(
-	  child: Row(
-	      mainAxisAlignment: MainAxisAlignment.start,
-	      children: <Widget>[
-		  Container(
-		      padding: EdgeInsets.all(5),
-		      child: Align(
-			  alignment: Alignment.centerLeft,
-			  child: Container(
-			      width: 30.0,
-			      height: 30.0,
-			      decoration: BoxDecoration(
-				  shape: BoxShape.circle,
-				  image: DecorationImage(
-				      fit: BoxFit.cover,
-				      image: NetworkImage("https://imgur.com/user/" +
-					  image.username + "/avatar")
-				  )
+      if (this.widget.isFromUser == false) {
+	  return Container(
+	      child: Row(
+		  mainAxisAlignment: MainAxisAlignment.start,
+		  children: <Widget>[
+		      Container(
+			  padding: EdgeInsets.all(5),
+			  child: Align(
+			      alignment: Alignment.centerLeft,
+			      child: Container(
+				  width: 30.0,
+				  height: 30.0,
+				  decoration: BoxDecoration(
+				      shape: BoxShape.circle,
+				      image: DecorationImage(
+					  fit: BoxFit.cover,
+					  image: NetworkImage(
+					      "https://imgur.com/user/" +
+						  image.username + "/avatar"
+					  )
+				      )
+				  ),
 			      ),
 			  ),
 		      ),
-		  ),
-		  Container(
-		      padding: EdgeInsets.only(left: 10),
-		      child: Text(
-			  image.username,
-			  style: TextStyle(fontWeight: FontWeight.w600),
-		      ),
-		  )
-	      ],
-	  ));
+		      Container(
+			  padding: EdgeInsets.only(left: 10),
+			  child: Text(
+			      image.username,
+			      style: TextStyle(fontWeight: FontWeight.w600),
+			  ),
+		      )
+		  ],
+	      )
+	  );
+      }
+      return Container();
   }
 
   Widget createPostImage(BuildContext context, GalleryImage image) {
+      if (this.widget.isFromUser == true) {
+	  return Image.network(
+	      "https://i.imgur.com/" +
+		  image.id +
+		  "." + ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1]),
+	      fit: BoxFit.fill,
+	  );
+      }
       return Image.network(
 	  "https://i.imgur.com/" +
 	      image.cover +
@@ -118,6 +139,21 @@ class _ImageViewerState extends State<ImageViewer> {
   }
 
   Widget createPostActions(BuildContext context, GalleryImage image) {
+      if (this.widget.isFromUser == true) {
+          return Container(
+	      child: Row(
+		  mainAxisAlignment: MainAxisAlignment.end,
+		  children: <Widget>[
+		      Container(
+			  child: Text(
+			      image.views.toString() + " views",
+			      style: TextStyle(fontWeight: FontWeight.w600),
+			  ),
+		      )
+		  ],
+	      ),
+	  );
+      }
       return Container(
 	  child: Row(
 	      mainAxisAlignment: MainAxisAlignment.start,
@@ -164,10 +200,6 @@ class _ImageViewerState extends State<ImageViewer> {
 			      });
 			  }),
 		  ),
-		  /*
-          Container(
-            child: IconButton(icon: Icon(Icons.comment, color: Colors.blueAccent), onPressed: null),
-          ),*/
 		  Container(
 		      child: IconButton(
 			  icon: Icon(Icons.save_alt, color: Colors.lightBlueAccent),
@@ -205,32 +237,39 @@ class _ImageViewerState extends State<ImageViewer> {
   }
 
   Widget createPostComments(BuildContext context, GalleryImage image) {
-      return Container(
-	  padding: EdgeInsets.all(10),
-	  child: Column(
-	      children: <Widget>[
-		  Container(
-		      alignment: Alignment.centerLeft,
-		      child: createPostComment(context, image.username, image.title),
-		  ),
-		  Container(
-		      alignment: Alignment.centerLeft,
-		      child: FlatButton(
-			  onPressed: () {
-			      Navigator.push(
-				  context,
-				  MaterialPageRoute(
-				      builder: (context) => ImageComments(image: image)));
-			  },
-			  textColor: Colors.grey,
-			  splashColor: Colors.white,
-			  highlightColor: Colors.white,
-			  child: Text(
-			      "See comments... (" + image.comments.toString() + ")",
-			      style: TextStyle(fontSize: 12),
-			  )),
-		  )
-	      ],
-	  ));
+      if (this.widget.isFromUser == false) {
+	  return Container(
+	      padding: EdgeInsets.all(10),
+	      child: Column(
+		  children: <Widget>[
+		      Container(
+			  alignment: Alignment.centerLeft,
+			  child: createPostComment(
+			      context, image.username, image.title),
+		      ),
+		      Container(
+			  alignment: Alignment.centerLeft,
+			  child: FlatButton(
+			      onPressed: () {
+				  Navigator.push(
+				      context,
+				      MaterialPageRoute(
+					  builder: (context) =>
+					      ImageComments(image: image)));
+			      },
+			      textColor: Colors.grey,
+			      splashColor: Colors.white,
+			      highlightColor: Colors.white,
+			      child: Text(
+				  "See comments... (" +
+				      image.comments.toString() + ")",
+				  style: TextStyle(fontSize: 12),
+			      )),
+		      )
+		  ],
+	      )
+	  );
+      }
+      return Container();
   }
 }

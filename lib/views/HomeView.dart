@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
         child: ListView.builder(
       itemCount: this.galleryList.gallery.length,
       itemBuilder: (BuildContext context, int index) {
-        return ImageViewer(image: this.galleryList.gallery[index], canPopContext: false);
+        return ImageViewer(image: this.galleryList.gallery[index], canPopContext: false, isFromUser: false);
       },
     ));
   }
