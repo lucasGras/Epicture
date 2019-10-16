@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:epicture/managers/imgur/Gallery.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
+import 'package:epicture/components/ImageViewer.dart';
 
 class SearchView extends StatefulWidget {
     SearchView({Key key}) : super(key: key);
@@ -230,20 +231,27 @@ class _SearchViewState extends State<SearchView> {
             child: Card(
                 elevation: 5,
                 semanticContainer: true,
-                child: GridTile(
-                    child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    "https://i.imgur.com/" + image.cover + "." +
-                                        image.imagesInfo[0].type.split('/')[1]
+                child: InkWell(
+                    onTap: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => ImageViewer(image: image, canPopContext: true))
+                        );
+                    },
+                    child: GridTile(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        "https://i.imgur.com/" + image.cover + "." +
+                                            image.imagesInfo[0].type.split('/')[1]
+                                    )
                                 )
-                            )
+                            ),
                         ),
-                    ),
+                ),
                 )
             ),
         );

@@ -3,6 +3,7 @@ import 'package:epicture/models/AccountBase.dart';
 import 'package:epicture/managers/imgur/Account.dart';
 import 'package:epicture/models/GalleryList.dart';
 import 'package:epicture/models/GalleryImage.dart';
+import 'package:epicture/components/ImageViewer.dart';
 
 class ProfileView extends StatefulWidget {
     ProfileView({Key key}) : super(key: key);
@@ -76,17 +77,21 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
         return Container(
             child: Card(
                 semanticContainer: true,
-                child: GridTile(
-                    child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    "https://i.imgur.com/" + image.id + "." +
-                                        ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1])
+                child: InkWell(
+                    onTap: () {
+                    },
+                    child: GridTile(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        "https://i.imgur.com/" + image.id + "." +
+                                            ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1])
+                                    )
                                 )
-                            )
+                            ),
                         ),
                     ),
                 )
