@@ -4,6 +4,7 @@ import 'package:epicture/views/SearchView.dart';
 import 'package:epicture/views/ProfileView.dart';
 import 'package:epicture/views/NewView.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:epicture/views/LoginView.dart';
 
 class NavigationBarWidget extends StatefulWidget {
     NavigationBarWidget({Key key}) : super(key: key);
@@ -20,6 +21,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         SearchView(),
         ProfileView()
     ];
+    bool loggedOut = false;
 
     void _onItemTapped(int index) {
         setState(() {
@@ -46,7 +48,11 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
                 actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.forward, color: Colors.white),
-                        onPressed: null
+                        onPressed: () {
+                            setState(() {
+                              this.loggedOut = true;
+                            });
+                        }
                     )
                 ],
             ),
@@ -55,6 +61,9 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
     @override
     Widget build(BuildContext context) {
+        if (this.loggedOut == true) {
+            return LoginView();
+        }
         return Scaffold(
             backgroundColor: Colors.grey.shade50,
             resizeToAvoidBottomInset: false,

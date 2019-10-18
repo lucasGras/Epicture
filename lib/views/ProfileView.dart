@@ -94,7 +94,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
                                         "https://i.imgur.com/" + image.id + "." +
-                                            ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1])
+                                            ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1]),
                                     )
                                 )
                             ),

@@ -122,11 +122,13 @@ class _ImageViewerState extends State<ImageViewer> {
 
   Widget createPostImage(BuildContext context, GalleryImage image) {
       if (this.widget.isFromUser == true) {
-	  return Image.network(
-	      "https://i.imgur.com/" +
-		  image.id +
-		  "." + ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1]),
-	      fit: BoxFit.fill,
+	  return Card(
+	    elevation: 7,
+	    child: Image.network(
+		"https://i.imgur.com/" +
+		    image.id +
+		    "." + ((image.imagesInfo == null) ? "jpg": image.imagesInfo[0].type.split('/')[1]),
+	    ),
 	  );
       }
       return Image.network(
@@ -141,6 +143,7 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget createPostActions(BuildContext context, GalleryImage image) {
       if (this.widget.isFromUser == true) {
           return Container(
+	      padding: EdgeInsets.all(10),
 	      child: Row(
 		  mainAxisAlignment: MainAxisAlignment.end,
 		  children: <Widget>[
@@ -230,9 +233,12 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget createPostComment(BuildContext context, String user, String comment) {
       return Text.rich(TextSpan(children: <TextSpan>[
 	  TextSpan(
-	      text: user + "  ",
+	      text: (user == null) ? "Unknown" : user + "  ",
 	      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
-	  TextSpan(text: comment, style: TextStyle(fontSize: 11))
+	  TextSpan(
+	      text: (comment == null) ? "No description..." : comment,
+	      style: TextStyle(fontSize: 11)
+	  )
       ]));
   }
 
@@ -270,6 +276,13 @@ class _ImageViewerState extends State<ImageViewer> {
 	      )
 	  );
       }
-      return Container();
+      return Container(
+	  padding: EdgeInsets.all(10),
+	  child: Row(
+	      children: <Widget>[
+	          createPostComment(context, image.username, image.title)
+	      ],
+	  ),
+      );
   }
 }
