@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:epicture/views/LoginView.dart';
-import 'package:epicture/managers/imgur/Account.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(Epicture());

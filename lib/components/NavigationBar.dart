@@ -8,7 +8,9 @@ import 'package:epicture/views/LoginView.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class NavigationBarWidget extends StatefulWidget {
-    NavigationBarWidget({Key key}) : super(key: key);
+    bool byPassLogin = false;
+
+    NavigationBarWidget({Key key, this.byPassLogin}) : super(key: key);
 
     @override
     _NavigationBarWidgetState createState() => _NavigationBarWidgetState();
@@ -62,7 +64,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
     @override
     Widget build(BuildContext context) {
-        if (this.loggedOut == true) {
+        if (this.loggedOut == true && this.widget.byPassLogin == false) {
             return LoginView();
         }
         return Scaffold(
