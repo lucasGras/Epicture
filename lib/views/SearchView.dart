@@ -234,7 +234,7 @@ class _SearchViewState extends State<SearchView> {
                 child: InkWell(
                     onTap: () {
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => ImageViewer(image: image, canPopContext: true))
+                            MaterialPageRoute(builder: (context) => ImageViewer(image: image, canPopContext: true, isFromUser: false))
                         );
                     },
                     child: GridTile(
